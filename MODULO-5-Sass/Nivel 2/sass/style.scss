@@ -1,0 +1,104 @@
+/*Imports de ficheros*/
+@import "reset";
+@import "fonts";
+@import "colors";
+
+/*variables*/
+$h-vh: 100vh;
+
+/*lista de colores*/
+$list-colors: $c-blue,$c-green, $c-purple, $c-yellow, $c-red;
+
+/*listas para la animación de la posición al cargar de los stripes*/
+$list-anim-names: animation1, animation2, animation3, animation4, animation5;//base 1
+$list-anim-duration:0.5s,0.8s,0.7s,1s,1.1s;
+$list-anim-percent:translate3d(-100%, 0%, 0%),translate3d(0%, 100%, 0%),translate3d(0%, -100%, 0%),translate3d(0%, 100%, 0%),translate3d(100%, 0%, 0%);
+
+/*mixins includes*/    
+/*Contenedor flex centrado*/
+@mixin container-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Contenido*/
+body {
+    margin: 10px 0 0 0;
+}   
+h1 {
+    font-size: $f-big;
+    font-weight: $font-bold;
+    color: $c-white;
+    font-family: $font-general;
+}
+
+/* strips selectores anidados*/
+section{
+    width: 100vw;
+    height: $h-vh;    
+    overflow: hidden;
+    text-align: $font-center;
+    display: flex;
+    cursor: pointer;
+    
+    div{
+        @include container-center;
+        position: relative;
+        width: 19.9vw;        
+        height: $h-vh; 
+        margin: 0.1vw;
+        text-align: $font-center;
+        overflow: hidden;       
+        div{
+            @include container-center;
+            position: absolute;
+            width: 100%;
+            height: $h-vh;            
+            text-align: $font-center;
+            
+            &::before {
+                content: "";
+                @include container-center;
+                position: absolute;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                width: 20vw;
+                height: $h-vh;  
+                background: $c-white;
+                opacity: 0.05;
+                overflow: hidden;
+
+                -webkit-transform-origin: center center;
+                transform-origin: center center;
+                -webkit-transform: skew(30deg) scaleY(1) translate(0, 0);
+                transform: skew(30deg) scaleY(1) translate(0, 0);
+                transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);                  
+            }
+            &:hover::before{
+                -webkit-transform: skew(0deg) scaleX(2) translate(0, 0);
+                transform: skew(0deg) scaleX(2) translate(0, 0);
+                opacity: 0.2;
+            }
+           
+        }
+    }
+}
+
+/*animaciones al cargar la página, bucle for*/
+@for $i from 1 through length($list-anim-names){ 
+    .strip:nth-child(#{$i}) .strip_content  {    
+        background-color: nth($list-colors, $i);
+        animation-name: nth($list-anim-names, $i);
+        animation-duration: nth($list-anim-duration, $i);
+        animation-timing-function: ease-out;        
+      }
+        @keyframes #{nth($list-anim-names, $i)}{
+        from {
+            transform: nth($list-anim-percent, $i);          
+        }
+      }
+ }
+
+
